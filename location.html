@@ -18,29 +18,24 @@
   </style>
 </head>
 <body>
-  <a-scene
-    embedded
-    vr-mode-ui="enabled: false"
-    arjs="sourceType: webcam; debugUIEnabled: false;"
-  >
-    <!-- This camera component grabs your device GPS -->
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
     <a-entity gps-camera rotation-reader></a-entity>
   </a-scene>
 
   <script>
-    // Once we have your current position, place the espresso model there:
+    // Place the espresso model right at your device's current location
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { latitude, longitude } = coords;
       const scene = document.querySelector('a-scene');
+      const ent = document.createElement('a-entity');
 
-      const espresso = document.createElement('a-entity');
-      espresso.setAttribute('gps-entity-place',
-                           `latitude: ${latitude}; longitude: ${longitude}`);
-      espresso.setAttribute('gltf-model', 'models/espresso.gltf');
-      espresso.setAttribute('scale', '0.1 0.1 0.1');
-      scene.appendChild(espresso);
+      ent.setAttribute('gps-entity-place',
+        `latitude: ${latitude}; longitude: ${longitude}`);
+      ent.setAttribute('gltf-model', 'models/espresso.gltf');
+      ent.setAttribute('scale', '0.1 0.1 0.1');
+      scene.appendChild(ent);
     }, err => {
-      alert('Location access denied — cannot place AR object.');
+      alert('Location access denied—cannot place AR object.');
       console.error(err);
     });
   </script>
