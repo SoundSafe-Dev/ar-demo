@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>AR Demo – Current Location</title>
+  <title>AR @ Current Location</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- A-Frame core -->
@@ -18,37 +18,51 @@
   </style>
 </head>
 <body>
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: false"
+    arjs="sourceType: webcam; debugUIEnabled: false;"
+  >
     <a-assets>
       <!-- Preload the coffee model -->
       <a-asset-item id="coffeeModel" src="models/starbucks_coffee.glb"></a-asset-item>
     </a-assets>
 
-    <!-- GPS camera -->
-    <a-entity gps-camera rotation-reader></a-entity>
+    <!-- This is the actual AR camera — shows your live video + tracks GPS -->
+    <a-camera gps-camera rotation-reader></a-camera>
   </a-scene>
 
   <script>
     window.addEventListener('load', () => {
       if (!navigator.geolocation) {
-        alert('Geolocation not supported by your browser.');
-        return;
+        return alert('Geolocation not supported.');
       }
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
-        console.log('Got geolocation:', coords);
-        const scene = document.querySelector('a-scene');
-        scene.addEventListener('loaded', () => {
-          const entity = document.createElement('a-entity');
-          entity.setAttribute('gltf-model', '#coffeeModel');
-          entity.setAttribute('gps-entity-place',
-            `latitude: ${coords.latitude}; longitude: ${coords.longitude}`);
-          entity.setAttribute('scale', '0.1 0.1 0.1');
-          scene.appendChild(entity);
-        });
-      }, err => {
-        alert('Location access denied—cannot place AR object.');
-        console.error('Geolocation error:', err);
-      }, { enableHighAccuracy: true, timeout: 10000 });
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => {
+          console.log('[AR] Got coords:', coords);
+          const { latitude, longitude, altitude } = coords;
+          const scene = document.querySelector('a-scene');
+
+          // Wait for the scene (and camera) to be fully ready
+          scene.addEventListener('loaded', () => {
+            console.log('[AR] Scene loaded — placing model');
+            const coffee = document.createElement('a-entity');
+            coffee.setAttribute('gltf-model', '#coffeeModel');
+            // Anchor at your exact lat/lon, using your device altitude
+            coffee.setAttribute(
+              'gps-entity-place',
+              `latitude: ${latitude}; longitude: ${longitude}; altitude: ${altitude || 1}`
+            );
+            coffee.setAttribute('scale', '0.1 0.1 0.1');
+            scene.appendChild(coffee);
+          });
+        },
+        err => {
+          console.error('[AR] Geolocation error', err);
+          alert('Location permission denied.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
     });
   </script>
 </body>
