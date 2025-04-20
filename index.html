@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Whiskey AR Demo</title>
-  <!-- model-viewer web component -->
+  <title>AR Demo Hub</title>
+  <!-- model-viewer component -->
   <script
     type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -12,13 +12,28 @@
   <style>
     body {
       margin: 0;
+      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-family: sans-serif;
+    }
+    nav {
+      width: 100%;
+      background: #333;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
     }
     h1 {
-      margin: 1rem;
+      margin: 1rem 0;
     }
     model-viewer {
       width: 100%;
@@ -28,7 +43,14 @@
   </style>
 </head>
 <body>
-  <h1>Tap the AR icon ↓</h1>
+  <nav>
+    <a href="index.html">Markerless (model-viewer)</a> |
+    <a href="location.html">Current‑Location AR</a> |
+    <a href="marker.html">Marker‑based AR</a>
+  </nav>
+
+  <h1>Markerless AR Demo</h1>
+  <p>Tap the AR icon ↓</p>
 
   <model-viewer
     src="models/whiskey.glb"
