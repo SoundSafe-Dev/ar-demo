@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AR Demo – Location</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- A-Frame core -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <!-- AR.js with GPS components -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-gps-camera.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-gps-entity-place.min.js"></script>
+
+  <style>
+    body, html { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
+    a-scene { position: fixed; top:0; left:0; width:100%; height:100%; }
+  </style>
+</head>
+<body>
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: false"
+    arjs="sourceType: webcam; debugUIEnabled: false;"
+  >
+    <!-- GPS camera to track device location -->
+    <a-entity gps-camera rotation-reader></a-entity>
+
+    <!-- Your espresso cup model at a known location -->
+    <a-entity
+      gps-entity-place="latitude: 42.4167; longitude: -90.4290;"
+      gltf-model="models/espresso.gltf"
+      scale="0.1 0.1 0.1"
+    ></a-entity>
+  </a-scene>
+</body>
+</html>
